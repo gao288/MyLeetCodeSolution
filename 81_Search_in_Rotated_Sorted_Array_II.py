@@ -1,41 +1,29 @@
 class Solution:
-    def search(self, nums: List[int], target: int) -> bool:
-        def find_start_i(l,r):
-            while l < r:
-                m = (l + r) // 2 
-                if(nums[m] > nums[r]):
-                    l = m + 1
-                elif(nums[m] < nums[r]):
-                    r = m
-                else:
-                    if nums[r-1] > nums[r]:
-                        l = r
-                        break;
-                    r -=1
-                    
-            return l
-        def bs(l,r):
-            while(l <= r):
-                m = (l+r)//2
-                if nums[m] == target:
-                    return True
-                else:
-                    if target < nums[m]:
-                        r = m - 1
-                    else:
-                        l = m + 1
-            return False     
-
+    def search(self, nums: List[int], target: int) -> int:
         if len(nums) == 0:
             return False
-        if len(nums) == 1:
-            if nums[0] == target:
-            
-                return True
+        left = 0
+        right = len(nums) - 1
+        while(left < right):
+            mid = (right + left) // 2
+            if nums[mid] == nums[right]:
+                if nums[mid] == target:
+                    return True
+                else:
+                    right-=1
+                    continue
+            if nums[mid] >= nums[left]:  # left part is non-roated
+                if target <= nums[mid] and target >= nums[left]:
+                    right = mid
+                else:
+                    left = mid + 1
             else:
-                return False
-        index = find_start_i(0,len(nums)-1)
-        if(target<= nums[len(nums)-1]): 
-            return bs(index,len(nums)-1)
-        else:
-            return bs(0,index)
+                if target > nums[mid] and target <= nums[right]:
+                    left = mid + 1
+                else:
+                    right = mid
+                
+                    
+                
+                
+        return True if nums[left] == target else False
